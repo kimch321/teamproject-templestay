@@ -55,7 +55,44 @@ export async function getServerSideProps(ctx) {
         return {props:{searchInfo, likeData, email}}
 }
 
-export default function Home({searchInfo,likeData, email}) {
+
+function EditorNav () {
+        return(
+            <Container fluid>
+                    <Row>
+                            <Col>
+                                    <Row>
+                                            <Col>
+                                                    <div className={'text-start pb-3 ps-5'} key={shortid.generate()}>
+                                                            <NavLink href={'/?epic=1'}> <AiFillLike
+                                                                className={"text-success fs-3"} key={shortid.generate()}/> </NavLink> </div>
+                                            </Col>
+                                            <Col>
+                                                    <div className={'text-start pb-3 ps-5'} key={shortid.generate()}>
+                                                            <NavLink href={'/?epic=2'}> <MdTempleBuddhist
+                                                                className={"text-dark fs-3"} key={shortid.generate()}/> </NavLink> </div>
+
+                                            </Col>
+                                            <Col>
+                                                    <div className={'text-start pb-3 ps-5'} key={shortid.generate()}>
+                                                            <NavLink href={'/?epic=3'}> <BsCalendarHeartFill
+                                                                className={"text-danger fs-3"} key={shortid.generate()}/> </NavLink> </div>
+                                            </Col>
+                                            <Col>
+                                                    <div className={'text-start pb-3 ps-5'} key={shortid.generate()}>
+                                                            <NavLink href={'/?epic=4'}> <GoGlobe
+                                                                className={"fs-3"} style={{color:'0D6EFD'}} key={shortid.generate()}/> </NavLink> </div>
+                                            </Col>
+                                    </Row>
+
+                            </Col>
+                            <Col></Col>
+                    </Row>
+            </Container>
+        )
+}
+
+function SearchResult({searchInfo, likeData, email}) {
         let [addr,setAddr] =useState()
 
         const [likeOnoffArr, setLikeOnoffArr] = useState(Array(searchInfo.length).fill(false));
@@ -81,8 +118,6 @@ export default function Home({searchInfo,likeData, email}) {
         };
 
         useEffect(() => {
-
-
                 const script = document.createElement('script');
 
                 script.async = true;
@@ -121,7 +156,6 @@ export default function Home({searchInfo,likeData, email}) {
                                                 scriptTag.remove();
                                         }
                                 });
-
                         });
                 };
                 script.addEventListener('load', onLoadKakaoMap);
@@ -137,7 +171,6 @@ export default function Home({searchInfo,likeData, email}) {
 
                         if(likeOnoffArr[idx] === true)
                         {
-
                                 const process_unLike = async (unlikeInfo) => {
 
 
@@ -152,7 +185,6 @@ export default function Home({searchInfo,likeData, email}) {
 
                                         return {result};
                                 }
-
                                 process_unLike(unlikeInfo).then(result => result).then(({result}) =>{
                                         if( result === true) {
                                                 const newLikeOnoffArr = [...likeOnoffArr];
@@ -160,7 +192,6 @@ export default function Home({searchInfo,likeData, email}) {
                                                 setLikeOnoffArr(newLikeOnoffArr);
                                         }
                                 })
-
                         }
                         else if(likeOnoffArr[idx] === false)
                         {
@@ -189,135 +220,106 @@ export default function Home({searchInfo,likeData, email}) {
                         alert('로그인해주세요!')
                 }
         }
+        return(
+            <Row className="likeslist tpl align-top">
+                    <Col md={6} className={'scrollable-col' }style={{ height: '830px'}}>
+                            { (searchInfo.length > 0 ) ? (      searchInfo.map((program,idx) => (
+                                    <Row className="tpl border border-2 border-danger rounded-2" onMouseOver={(e) => handleMouseOver(e,program.ADDR)} style={{height: '190px',backgroundColor:'#FCF5EB'}} key={shortid.generate()}>
 
+                                            <Col md={4} className={'d-flex justify-content-start'} style={{height:'100%'}} key={shortid.generate()}>
+                                                    <NavLink href={`/temple?id=${program.T_NAME}&pid=${program.PID}`} key={shortid.generate()}>
+                                                            <img src={program.P_PICLINK} alt="프로그램 이미지" width={'157px'} style={{ height:'100%',paddingTop:'13px',paddingBottom:'13px'}} key={shortid.generate()}/>
+                                                    </NavLink>
+                                            </Col>
 
-        return (
-            <div className="bg-white" id="wrapper" style={{marginTop:'65px'}}>
-                    <Container fluid>
-                            <Row>
-                                    <Col>
-                                            <Row>
-                                                    <Col>
-                                                            <div className={'text-start pb-3 ps-5'} key={shortid.generate()}>
-                                                                    <NavLink href={'/?epic=1'}> <AiFillLike
-                                                                        className={"text-success fs-3"} key={shortid.generate()}/> </NavLink> </div>
-                                                    </Col>
-                                                    <Col>
-                                                            <div className={'text-start pb-3 ps-5'} key={shortid.generate()}>
-                                                                    <NavLink href={'/?epic=2'}> <MdTempleBuddhist
-                                                                        className={"text-dark fs-3"} key={shortid.generate()}/> </NavLink> </div>
-
-                                                    </Col>
-                                                    <Col>
-                                                            <div className={'text-start pb-3 ps-5'} key={shortid.generate()}>
-                                                                    <NavLink href={'/?epic=3'}> <BsCalendarHeartFill
-                                                                        className={"text-danger fs-3"} key={shortid.generate()}/> </NavLink> </div>
-                                                    </Col>
-                                                    <Col>
-                                                            <div className={'text-start pb-3 ps-5'} key={shortid.generate()}>
-                                                                    <NavLink href={'/?epic=4'}> <GoGlobe
-                                                                        className={"fs-3"} style={{color:'0D6EFD'}} key={shortid.generate()}/> </NavLink> </div>
-                                                    </Col>
-                                            </Row>
-
-                                    </Col>
-                                    <Col></Col>
-                            </Row>
-                            <Row className="likeslist tpl align-top">
-                                    <Col md={6} className={'scrollable-col' }style={{ height: '830px'}}>
-                                            { (searchInfo.length > 0 ) ? (      searchInfo.map((program,idx) => (
-
-
-                                                    <Row className="tpl border border-2 border-danger rounded-2" onMouseOver={(e) => handleMouseOver(e,program.ADDR)} style={{height: '190px',backgroundColor:'#FCF5EB'}} key={shortid.generate()}>
-
-                                                                    <Col md={4} className={'d-flex justify-content-start'} style={{height:'100%'}} key={shortid.generate()}>
-                                                                            <NavLink href={`/temple?id=${program.T_NAME}&pid=${program.PID}`} key={shortid.generate()}>
-                                                                            <img src={program.P_PICLINK} alt="프로그램 이미지" width={'157px'} style={{ height:'100%',paddingTop:'13px',paddingBottom:'13px'}} key={shortid.generate()}/>
-                                                                            </NavLink>
-                                                                    </Col>
-
-                                                            <Col md={8} style={{height:'100%'}} key={shortid.generate()}>
-                                                                    <Row style={{height:'140px'}} key={shortid.generate()}>
-                                                                            <Col key={shortid.generate()}>
-                                                                                    <Row key={shortid.generate()}>
-                                                                                            <p className={"mb-0 pb-3 text-secondary text-center fw-bold fs-5"} key={shortid.generate()}>{program.P_NAME.substring(0, program.P_NAME.indexOf("[")) + program.P_NAME.substring(program.P_NAME.indexOf("]") + 1)}</p>
-                                                                                    </Row>
-                                                                                    <Row className={"pb-2"} key={shortid.generate()}>
-                                                                                            <Col md={6} key={shortid.generate()}>
-                                                                                                    <p className={"mb-0 fw-semibold text-primary text-center fs-6"} key={shortid.generate()}>{program.T_NAME}</p>
-                                                                                            </Col>
-                                                                                            <Col md={6} key={shortid.generate()}>
-                                                                                                    <p className={"mb-0 text-start"} style={{fontSize: '14px'}} key={shortid.generate()}>{program.P_STRDATE} ~ {program.P_ENDDATE}</p>
-                                                                                            </Col>
-                                                                                    </Row>
-                                                                                    <Row key={shortid.generate()}>
-                                                                                            <p className={"mb-0 text-center ADDR"} style={{fontSize: '14px'}} key={shortid.generate()}>{program.ADDR}</p>
-                                                                                    </Row>
+                                            <Col md={8} style={{height:'100%'}} key={shortid.generate()}>
+                                                    <Row style={{height:'140px'}} key={shortid.generate()}>
+                                                            <Col key={shortid.generate()}>
+                                                                    <Row key={shortid.generate()}>
+                                                                            <p className={"mb-0 pb-3 text-secondary text-center fw-bold fs-5"} key={shortid.generate()}>{program.P_NAME.substring(0, program.P_NAME.indexOf("[")) + program.P_NAME.substring(program.P_NAME.indexOf("]") + 1)}</p>
+                                                                    </Row>
+                                                                    <Row className={"pb-2"} key={shortid.generate()}>
+                                                                            <Col md={6} key={shortid.generate()}>
+                                                                                    <p className={"mb-0 fw-semibold text-primary text-center fs-6"} key={shortid.generate()}>{program.T_NAME}</p>
+                                                                            </Col>
+                                                                            <Col md={6} key={shortid.generate()}>
+                                                                                    <p className={"mb-0 text-start"} style={{fontSize: '14px'}} key={shortid.generate()}>{program.P_STRDATE} ~ {program.P_ENDDATE}</p>
                                                                             </Col>
                                                                     </Row>
                                                                     <Row key={shortid.generate()}>
-                                                                            <Col key={shortid.generate()}>{(() => {
-                                                                                    switch (program.E_PICKTF) {
-                                                                                            case 1:
-                                                                                                    return (
-                                                                                                        <p className={'text-start ps-5'} key={shortid.generate()}>
-                                                                                                                <AiFillLike className={"text-success fs-3"} key={shortid.generate()}/>
-                                                                                                        </p>
-                                                                                                    );
-                                                                                            case 2:
-                                                                                                    return (
-                                                                                                        <p className={'text-start ps-5'} key={shortid.generate()}>
-                                                                                                                <MdTempleBuddhist className={"text-dark fs-3"} key={shortid.generate()}/>
-                                                                                                        </p>
-                                                                                                    );
-                                                                                            case 3:
-                                                                                                    return (
-                                                                                                        <p className={'text-start ps-5'} key={shortid.generate()}>
-                                                                                                                <BsCalendarHeartFill className={"text-danger fs-3"} key={shortid.generate()}/>
-                                                                                                        </p>
-                                                                                                    );
-                                                                                            case 4:
-                                                                                                    return (
-                                                                                                        <p className={'text-start ps-5'} key={shortid.generate()}>
-                                                                                                                <GoGlobe className={"fs-3"} style={{color:'0D6EFD'}} key={shortid.generate()}/>
-                                                                                                        </p>
-                                                                                                    );
-                                                                                            default:
-                                                                                                    return <p></p>;
-                                                                                    }
-                                                                            })()}
-                                                                            </Col>
-                                                                            <Col key={shortid.generate()}>
-                                                                                    <div className={'me-0'} data-key={idx} data-id={program.PID} id={program.PID} onClick={(e) =>toggleLike(e,idx,program.PID)} style={{width:'48px',zIndex:'2',position: 'relative'}} className={'text-end pe-5'} key={shortid.generate()}>{(likeOnoffArr[idx]) ? (<FcLike className={"fs-3"} style={{zIndex:'-1',position: 'relative'}} />) : (<FcLikePlaceholder className={"fs-3"} style={{zIndex:'-2',position: 'relative'}} key={shortid.generate()} />)} </div>
-                                                                            </Col>
-                                                                            <Col>
-                                                                                    <div key={shortid.generate()}>{
-                                                                                            (program.REVIEWCNT >= 2000) ?
-                                                                                                (<div><BsFillStarFill className={'text-warning'} /><BsFillStarFill className={'text-warning'} /><BsFillStarFill className={'text-warning'} /></div>)
-                                                                                                : (program.REVIEWCNT >= 1000) ? (<div><BsFillStarFill className={'text-warning'} /><BsFillStarFill className={'text-warning'} /></div>)
-                                                                                                : (program.REVIEWCNT >= 500) ? (<div><BsFillStarFill className={'text-warning'} /><BsFillStarFill className={'text-warning'} /></div>)
-                                                                                                : (<div></div>)
-                                                                                    }</div>
-                                                                            </Col>
+                                                                            <p className={"mb-0 text-center ADDR"} style={{fontSize: '14px'}} key={shortid.generate()}>{program.ADDR}</p>
                                                                     </Row>
-
+                                                            </Col>
+                                                    </Row>
+                                                    <Row key={shortid.generate()}>
+                                                            <Col key={shortid.generate()}>{(() => {
+                                                                    switch (program.E_PICKTF) {
+                                                                            case 1:
+                                                                                    return (
+                                                                                        <p className={'text-start ps-5'} key={shortid.generate()}>
+                                                                                                <AiFillLike className={"text-success fs-3"} key={shortid.generate()}/>
+                                                                                        </p>
+                                                                                    );
+                                                                            case 2:
+                                                                                    return (
+                                                                                        <p className={'text-start ps-5'} key={shortid.generate()}>
+                                                                                                <MdTempleBuddhist className={"text-dark fs-3"} key={shortid.generate()}/>
+                                                                                        </p>
+                                                                                    );
+                                                                            case 3:
+                                                                                    return (
+                                                                                        <p className={'text-start ps-5'} key={shortid.generate()}>
+                                                                                                <BsCalendarHeartFill className={"text-danger fs-3"} key={shortid.generate()}/>
+                                                                                        </p>
+                                                                                    );
+                                                                            case 4:
+                                                                                    return (
+                                                                                        <p className={'text-start ps-5'} key={shortid.generate()}>
+                                                                                                <GoGlobe className={"fs-3"} style={{color:'0D6EFD'}} key={shortid.generate()}/>
+                                                                                        </p>
+                                                                                    );
+                                                                            default:
+                                                                                    return <p></p>;
+                                                                    }
+                                                            })()}
+                                                            </Col>
+                                                            <Col key={shortid.generate()}>
+                                                                    <div className={'me-0'} data-key={idx} data-id={program.PID} id={program.PID} onClick={(e) =>toggleLike(e,idx,program.PID)} style={{width:'48px',zIndex:'2',position: 'relative'}} className={'text-end pe-5'} key={shortid.generate()}>{(likeOnoffArr[idx]) ? (<FcLike className={"fs-3"} style={{zIndex:'-1',position: 'relative'}} />) : (<FcLikePlaceholder className={"fs-3"} style={{zIndex:'-2',position: 'relative'}} key={shortid.generate()} />)} </div>
+                                                            </Col>
+                                                            <Col>
+                                                                    <div key={shortid.generate()}>{
+                                                                            (program.REVIEWCNT >= 2000) ?
+                                                                                (<div><BsFillStarFill className={'text-warning'} /><BsFillStarFill className={'text-warning'} /><BsFillStarFill className={'text-warning'} /></div>)
+                                                                                : (program.REVIEWCNT >= 1000) ? (<div><BsFillStarFill className={'text-warning'} /><BsFillStarFill className={'text-warning'} /></div>)
+                                                                                    : (program.REVIEWCNT >= 500) ? (<div><BsFillStarFill className={'text-warning'} /><BsFillStarFill className={'text-warning'} /></div>)
+                                                                                        : (<div></div>)
+                                                                    }</div>
                                                             </Col>
                                                     </Row>
 
+                                            </Col>
+                                    </Row>
+                                )
+                            )) : (
+                                <Row className="tpl border border-2 border-danger rounded-2" style={{height: '150px',backgroundColor:'#FCF5EB'}} key={shortid.generate()}>
+                                        <p className={'h1'} key={shortid.generate()}>예약 가능한 프로그램이 없습니다.</p>
+                                </Row>
+                            )
+                            }
+                    </Col>
+                    <Col md={6} className={'media414'}>
+                            <div id={'map'} style={{ width:'870px', height:'830px'}}></div>
+                    </Col>
+            </Row>
+        )
+}
 
-                                                )
-                                            )) : (
-                                                <Row className="tpl border border-2 border-danger rounded-2" style={{height: '150px',backgroundColor:'#FCF5EB'}} key={shortid.generate()}>
-                                                        <p className={'h1'} key={shortid.generate()}>예약 가능한 프로그램이 없습니다.</p>
-                                                </Row>
-                                            )
-                                            }
-                                    </Col>
-                                    <Col md={6} className={'media414'}>
-                                            <div id={'map'} style={{ width:'870px', height:'830px'}}></div>
-                                    </Col>
-                            </Row>
-
+export default function Home({searchInfo,likeData, email}) {
+        return (
+            <div className="bg-white" id="wrapper" style={{marginTop:'65px'}}>
+                    <Container fluid>
+                            <EditorNav />
+                            <SearchResult searchInfo = {searchInfo} likeData = {likeData} email = {email}/>
                     </Container>
 
             </div>
